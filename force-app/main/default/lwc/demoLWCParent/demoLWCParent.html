@@ -1,0 +1,24 @@
+<!--
+/***
+ * Widgets Are Us, Inc.
+ * Copyright (c) 2023
+ *
+ * @author      Rick Baker
+ * @Description This is a demo of how to communicate from a parent LWC to a child LWC.
+ */ -->
+ <template>
+    <lightning-card title="Parent to Child Demo">
+        <lightning-layout>
+
+            <lightning-layout-item flexibility="auto" padding="around-small"  >
+                <lightning-input label="Enter the Message" onchange={handleChangeEvent}></lightning-input>
+            </lightning-layout-item>
+
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <!-- Here is where we hook in the child component from the parent component -->
+                <c-demo-l-w-c-child></c-demo-l-w-c-child>
+            </lightning-layout-item>
+
+        </lightning-layout>
+    </lightning-card>
+</template>
