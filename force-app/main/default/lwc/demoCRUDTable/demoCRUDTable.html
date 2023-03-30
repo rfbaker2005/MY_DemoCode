@@ -1,0 +1,77 @@
+<!--
+ ***
+ * Widgets Are Us, Inc.
+ * Copyright (c) 2023
+ *
+ * @author      Rick Baker
+ * @Description This Lightning Web Component (LWC) is for demonstrating HTML and Javascript code that performs
+ *              CRUD operations on the Salesforce platform. The LWC will showcase these CRUD operations in the
+ *              form of a table and other auxiliary components that will present a list of accounts in a table.
+ */ -->
+<!-- sldsValidatorIgnore -->
+<template>
+	<lightning-card variant="Narrow" title="Salesforce CRUD Demo" icon-name="standard:account">
+		<div class="slds-var-p-around_small lgc-bg">
+			<div class="slds-m-top_small slds-m-bottom_x-small">
+				<!-- Button for retrieving all accounts a new Accounts -->
+				<lightning-button
+					class   = "slds-m-left_x-small"
+					variant = "brand"
+					label   = "Retrieve Accounts"
+					title   = "Retrieve Accounts"
+					onclick = {handleRetrieveAllAccounts}
+				>
+				</lightning-button>
+				<!-- Button for adding a new Accounts -->
+				<lightning-button
+					class   = "slds-m-left_x-small"
+					variant = "brand"
+					label   = "New Account"
+					title   = "New Account"
+					onclick = {handleAddNewAccount}
+				>
+				</lightning-button>
+				<!-- Button for delete Accounts -->
+				<lightning-button
+					class   = "slds-m-left_x-small"
+					variant = "brand"
+					label   = "Delete Accounts"
+					title   = "Delete Accounts"
+					onclick = {handleConfirmClick}
+				>
+				</lightning-button>
+				<!-- Edit control for specifying account name filter -->
+				<lightning-input
+					type     = "text"
+					name     = "retrieveAccountsButton"
+					label    = "Retrieve Accounts Like"
+					value    = {nameFilter}
+					onblur   = {handleRetrieveAccountsLike}
+				>
+				</lightning-input>
+			</div>
+		</div>
+
+		<!-- Do not display table if nothing in the table -->
+		<template if:true={tableData.length}>
+			<!-- The Table component -->
+			<div style="height: 500;">
+				<lightning-datatable
+					aria-multiselectable	= "true"
+					key-field           	= "Id"
+					data                	= {tableData}
+					draft-values           	= {draftValues}
+					columns                	= {columns}
+					oncellchange           	= {handleOnCellChange}
+				>
+				</lightning-datatable>
+			</div>
+		</template>
+	</lightning-card>
+
+	<!-- <lightning-layout-item flexibility="auto" padding="around-small"> -->
+		<!-- Here is where we hook in the child component from the parent component -->
+		<c-demo-c-r-u-d-create></c-demo-c-r-u-d-create>
+	<!-- </lightning-layout-item> -->
+
+</template>

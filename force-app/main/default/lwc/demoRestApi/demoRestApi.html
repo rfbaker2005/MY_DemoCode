@@ -1,0 +1,43 @@
+<!--
+ ***
+ * Widgets Are Us, Inc.
+ * Copyright (c) 2023
+ *
+ * @author       Rick Baker
+ * @Description  This HTML file displays a list of language Ids that are pulled, via REST GET call,
+ *               from the Google Translate site and displayed in a combo box.
+ */
+-->
+<template>
+    <lightning-card variant="Narrow" title="Initialize Language Ids from Google Translate" icon-name="standard:account">
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid">
+                <div class="slds-col">
+                    <lightning-combobox
+                        id          = "select_language_from"
+                        name        = "select_language_from"
+                        label       = "Translate From"
+                        placeholder = "Translate From"
+                        options     = {languageOptionsFrom}
+                        value       = {selectedLanguageFrom}
+                        onchange    = {handleLanguageChangeFrom}
+                    >
+                    </lightning-combobox>
+                </div>
+                <div></div>
+                <div class="slds-col">
+                    <lightning-combobox
+                        id          = "select_language_to"
+                        name        = "select_language_to"
+                        label       = "Translate To"
+                        placeholder = "Translate To"
+                        options     = {languageOptionsTo}
+                        value       = {selectedLanguageTo}
+                        onchange    = {handleLanguageChangeTo}
+                    >
+                    </lightning-combobox>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

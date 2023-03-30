@@ -1,0 +1,55 @@
+<!--
+ ***
+ * Rakuten
+ * Copyright (c) 2023
+ *
+ * @author       Rick Baker
+ * @Description  This HTML file displays a table of accounts and allows for inline changing of the
+ *               account Description field.  Results may be verified by refreshing the browser.
+ */
+-->
+<!-- sldsValidatorIgnore -->
+<template>
+	<lightning-card variant="Narrow" title="Retrieve Accounts by Filtered Name" icon-name="standard:account">
+		<div class="slds-m-top_medium slds-m-bottom_x-large">
+			<!-- Edit control for specifying account name filter -->
+			<div class="slds-var-p-around_medium lgc-bg">
+				<lightning-input
+					type     = "text"
+					name     = "retrieveAccountsButton"
+					label    = "Accounts Like"
+					value    = {nameFilter}
+					onchange = {handleNameFilterChange}
+				>
+				</lightning-input>
+				<!-- Button for retrieving Accounts -->
+				<lightning-button
+					class   = "slds-m-left_x-small"
+					variant = "base"
+					label   = "Retrieve Accounts"
+					title   = "Retrieve Accounts"
+					onclick = {handleRetrieveAccountsLike}
+				>
+				</lightning-button>
+			</div>
+		</div>
+
+		<!-- Do not display table if nothing in the table -->
+		<template if:true={tableData.length}>
+			<!-- The Table component -->
+			<div style="height: 300px;">
+				<lightning-datatable
+					hide-checkbox-column
+					suppress-bottom-bar
+					key-field           = "Id"
+					data                = {tableData}
+					draft-values        = {draftValues}
+					columns             = {columns}
+					row-number-offset   = {rowOffset}
+					oncellchange        = {handleOnCellChange}
+				>
+				</lightning-datatable>
+			</div>
+		</template>
+	</lightning-card>
+</template>

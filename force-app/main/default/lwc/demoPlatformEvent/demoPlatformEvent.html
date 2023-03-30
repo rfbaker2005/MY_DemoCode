@@ -1,0 +1,25 @@
+<!--
+/***
+ * Widgets Are Us, Inc.
+ * Copyright (c) 2023
+ *
+ * @author      Rick Baker
+ * @Description This LWC is a demontration of subscibing to a platform event subject
+ *              and displaying the results of that event.  In this demonstration, we
+ *              "Google Translate" event, that will be dispatched from Apex after it
+ *              performs a REST call to retrieve supported language Ids from the
+ *              service.
+ */ -->
+<template>
+    <lightning-card title="Demo Platform Event" icon-name="standard:contact">
+        <div class="slds-var-m-top_medium slds-var-m-bottom_x-large">
+            <lightning-textarea
+                value       = {languageIds}
+                label       = "Google Translate Supported Languages"
+                max-length  = "2000"
+                read-only
+            >
+            </lightning-textarea>
+        </div>
+    </lightning-card>
+</template>

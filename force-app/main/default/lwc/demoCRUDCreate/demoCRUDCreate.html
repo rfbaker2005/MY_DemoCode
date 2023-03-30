@@ -1,0 +1,106 @@
+<!-- sldsValidatorIgnore -->
+<!--
+ ***
+ * Widgets Are Us, Inc.
+ * Copyright (c) 2023
+ *
+ * @author      Rick Baker
+ * @Description This Lightning Web Component (LWC) is for demonstrating HTML and Javascript code that performs
+ *              CRUD operations on the Salesforce platform. This component serves as a dialog to enter field
+ *              values to create an account.
+ */ -->
+ <template>
+    <!-- modal start -->
+    <template if:true={isShowModal}>
+
+         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+         <div class="slds-modal__container">
+             <!-- modal header start -->
+             <header class="slds-modal__header">
+                 <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
+                     <lightning-icon icon-name="utility:close"
+                         alternative-text="close"
+                         variant="inverse"
+                         size="small" >
+                     </lightning-icon>
+                     <span class="slds-assistive-text">Close</span>
+                 </button>
+                 <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Account</h2>
+             </header>
+
+             <!-- modal body start -->
+             <lightning-record-edit-form object-api-name="Account">
+                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                    <lightning-messages></lightning-messages>
+                    <lightning-input
+                        name     = "AccountName"
+                        type     = "text"
+                        label    = "Account Name"
+                        value    = {accountName}
+                        onchange = {handleChangeAccountName}
+                    >
+                    </lightning-input>
+                    <lightning-input
+                        type     = "text"
+                        name     = "AccountDescription"
+                        label    = "Description"
+                        value    = {description}
+                        onchange = {handleChangeDescription}
+                    >
+                    </lightning-input>
+                    <lightning-input
+                        type     = "text"
+                        name     = "BillingStreet"
+                        label    = "Billing Street"
+                        value    = {billingStreet}
+                        onchange = {handleChangeAccountBillingStreet}
+                    >
+                    </lightning-input>
+                    <lightning-input
+                        type     = "text"
+                        name     = "BillingCity"
+                        label    = "Billing City"
+                        value    = {billingCity}
+                        onchange = {handleChangeAccountBillingCity}
+                    >
+                    </lightning-input>
+                    <lightning-input
+                        type     = "text"
+                        name     = "BillingState"
+                        label    = "Billing State"
+                        value    = {billingState}
+                        onchange = {handleChangeAccountBillingState}
+                    >
+                    </lightning-input>
+                    <lightning-input
+                        type     = "text"
+                        name     = "BillingZip"
+                        label    = "Billing Zip"
+                        value    = {billingZip}
+                        onchange = {handleChangeAccountBillingZip}
+                    >
+                    </lightning-input>
+                    <lightning-input
+                        type     = "text"
+                        name     = "BillingCountry"
+                        label    = "Billing Country"
+                        value    = {billingCountry}
+                        onchange = {handleChangeAccountBillingCountry}
+                    >
+                    </lightning-input>
+                </div>
+            </lightning-record-edit-form>
+
+             <!-- modal footer start-->
+             <footer class="slds-modal__footer">
+                 <button class="slds-button slds-button_neutral" onclick={saveRecord}>Save</button>
+                 <button class="slds-button slds-button_neutral" onclick={hideModalBox}>Cancel</button>
+             </footer>
+
+         </div>
+         </section>
+     <div class="slds-backdrop slds-backdrop_open"></div>
+
+  </template>
+  <!-- modal end -->
+</template>
