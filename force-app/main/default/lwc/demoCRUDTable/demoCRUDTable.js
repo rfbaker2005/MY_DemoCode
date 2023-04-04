@@ -18,20 +18,20 @@ import   LightningConfirm  from 'lightning/confirm';
 
 // Define row actions
 const actions = [
-    { label: 'View',   name: 'view' },
-    { label: 'Edit',   name: 'edit' },
+    { label: 'View',   name: 'view'   },
+    { label: 'Edit',   name: 'edit'   },
     { label: 'Delete', name: 'delete' }
 ];
 
 // Define columns
 const columns = [
-    { label: 'Name',                fieldName: 'Name',              sortable: true, type: 'text', editable: true },
+    { label: 'Name',                fieldName: 'Name',              sortable: true, type: 'text', editable: true  },
     { label: 'Description',         fieldName: 'Description',       sortable: true, type: 'text', editable: false },
-    { label: 'Billing Street',      fieldName: 'BillingStreet',     sortable: true, type: 'text', editable: true },
-    { label: 'Billing City',        fieldName: 'BillingCity',       sortable: true, type: 'text', editable: true },
-    { label: 'Billing State',       fieldName: 'BillingState',      sortable: true, type: 'text', editable: true },
-    { label: 'Billing Postal Code', fieldName: 'BillingPostalCode', sortable: true, type: 'text', editable: true },
-    { label: 'Billing Country',     fieldName: 'BillingCountry',    sortable: true, type: 'text', editable: true },
+    { label: 'Billing Street',      fieldName: 'BillingStreet',     sortable: true, type: 'text', editable: true  },
+    { label: 'Billing City',        fieldName: 'BillingCity',       sortable: true, type: 'text', editable: true  },
+    { label: 'Billing State',       fieldName: 'BillingState',      sortable: true, type: 'text', editable: true  },
+    { label: 'Billing Postal Code', fieldName: 'BillingPostalCode', sortable: true, type: 'text', editable: true  },
+    { label: 'Billing Country',     fieldName: 'BillingCountry',    sortable: true, type: 'text', editable: true  },
     {
         type: 'action',
         typeAttributes: {
@@ -134,15 +134,18 @@ export default class demoCRUDTable extends NavigationMixin(LightningElement) {
 
             this.recordId = '';
 
-            return refreshApex(this.refreshTable);
+            return refreshApex(this.tableData);
         }
     }
 
+    /***
+     * Called when user selects an action from the table action
+     */
     handleRowActions(event) {
 
-        const actionName    = event.detail.action.name;
-        const row           = event.detail.row;
-        this.recordId       = row.Id;
+        const actionName = event.detail.action.name;
+        const row        = event.detail.row;
+        this.recordId    = row.Id;
 
         switch (actionName) {
             case 'view':
@@ -164,77 +167,18 @@ export default class demoCRUDTable extends NavigationMixin(LightningElement) {
                     }
                 });
                 break;
-            // case 'delete':
-            //     this.delAccount(row);
-            //     break;
+            case 'delete':
+                this.delAccount(row);
+                break;
         }
     }
 
     handleSortColumns (event) {
 
-        this.sortBy           = event.detail.fieldName;
-        this.sortDirection    = event.detail.sortDirection;
+        this.sortBy        = event.detail.fieldName;
+        this.sortDirection = event.detail.sortDirection;
 
         return refreshApex (this.result);
-    }
-
-    async handleConfirmDelete (event) {
-
-        console.log('DEBUG.demoCRUDTable.handleConfirmClick.01.1.1 event: '+ JSON.stringify(event));
-
-        const result = await LightningConfirm.open ({
-            message: 'Delete Selected Account(s)?',
-            variant: 'headerless',
-            label: 'Delete Selected Account(s)?',
-        });
-
-        console.log('DEBUG.demoCRUDTable.handleConfirmClick.01.2.1 OK result: '+ result);
-
-        if (result=== true) {
-
-            console.log('DEBUG.demoCRUDTable.handleConfirmClick.01.3.1 OK result: '+ result);
-
-            this.deleteSelectedAccounts();
-
-            console.log('DEBUG.demoCRUDTable.handleConfirmClick.01.3.2 OK result: '+ result);
-
-        } else {
-
-            console.log('DEBUG.demoCRUDTable.handleConfirmClick.01.4.1 Cancel result: '+ result);
-        }
-    }
-
-    deleteSelectedAccounts () {
-
-        let selectedAccounts = this.template.querySelector("lightning-datatable").getSelectedRows();
-
-        console.log('DEBUG.demoCRUDTable.handleDeleteSelectedAccounts.01.1.1 selectedAccounts: '+ JSON.stringify(selectedAccounts));
-
-        deleteAccounts({accounts: selectedAccounts})
-        .then(result => {
-
-            console.log('DEBUG.demoCRUDTable.handleDeleteSelectedAccounts.01.2.1 result: '+ JSON.stringify(result));
-        })
-        .catch(error => {
-
-            console.log('DEBUG.demoCRUDTable.handleDeleteSelectedAccounts.01.3.1 this.error: '+ JSON.stringify(error));
-        });
-     }
-
-    handleRetrieveAllAccounts (event) {
-
-        this.handleRetrieveAccountsLike (undefined);
-    }
-
-    handleRetrieveAccountsLike (event) {
-
-        console.log('DEBUG.demoCRUDTable.handleRetrieveAccountsLike.01.1.1 event: '+ JSON.stringify(event));
-
-        this.nameFilter = (event == undefined ? '' : event.target.value);
-
-        console.log('DEBUG.demoCRUDTable.handleRetrieveAccountsLike.1.2 this.nameFilter: '+ this.nameFilter);
-
-        this.retrieveAccountsLike (this.nameFilter);
     }
 
     /***
@@ -284,23 +228,32 @@ export default class demoCRUDTable extends NavigationMixin(LightningElement) {
         }
     }
 
+    /***
+     * Called when user clicks the "New Account" button.
+     */
     handleAddNewAccount (event) {
 
         console.log('DEBUG.demoCRUDTable.handleAddNewAccount.01.1.1 event: '+ JSON.stringify(event));
 
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: undefined,
-                actionName: 'new'
-            }
-        });
+        let childLWC = this.template.querySelector('c-demo-c-r-u-d-create');
 
-        // let childLWC = this.template.querySelector('c-demo-c-r-u-d-create');
+        console.log('DEBUG.demoCRUDTable.handleAddNewAccount.01.1.2 childLWC: '+ JSON.stringify(childLWC));
 
-        // console.log('DEBUG.demoCRUDTable.handleAddNewAccount.01.1.2 childLWC: '+ JSON.stringify(childLWC));
+        childLWC.showModalBox();
+    }
 
-        // childLWC.showModalBox('My Test Name');
+    /***
+     * Called when user clicks the "Delete Accounts" button.
+     */
+    handleDeleteSelectedAccounts (event) {
+
+        console.log('DEBUG.demoCRUDTable.handleDeleteSelectedAccounts.01.1.1 event: ['+JSON.stringify(event)+']');
+
+        let childLWC = this.template.querySelector('c-demo-c-r-u-d-delete');
+
+        console.log('DEBUG.demoCRUDTable.handleDeleteSelectedAccounts.01.1.2 childLWC: '+ JSON.stringify(childLWC));
+
+        childLWC.showModalBox('My Test Name');
     }
 
     /***
