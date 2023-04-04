@@ -10,50 +10,53 @@
  */ -->
 <!-- sldsValidatorIgnore -->
 <template>
+
+    <!-- Show spinner whirley gig -->
+    <div if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+    </div>
+
 	<lightning-card variant="Narrow" title="Salesforce CRUD Demo" icon-name="standard:account">
 		<div class="slds-var-p-around_small lgc-bg">
-			<div class="slds-m-top_small slds-m-bottom_x-small">
-				<!-- Button for retrieving all accounts a new Accounts -->
-				<lightning-button
-					class   = "slds-m-left_x-small"
-					variant = "brand"
-					label   = "Retrieve Accounts"
-					title   = "Retrieve Accounts"
-					onclick = {handleRetrieveAllAccounts}
-				>
-				</lightning-button>
-				<!-- Button for adding a new Accounts -->
-				<lightning-button
-					class   = "slds-m-left_x-small"
-					variant = "brand"
-					label   = "New Account"
-					title   = "New Account"
-					onclick = {handleAddNewAccount}
-				>
-				</lightning-button>
-				<!-- Button for delete Accounts -->
-				<lightning-button
-					class   = "slds-m-left_x-small"
-					variant = "brand"
-					label   = "Delete Accounts"
-					title   = "Delete Accounts"
-					onclick = {handleConfirmClick}
-				>
-				</lightning-button>
-				<!-- Edit control for specifying account name filter -->
-				<lightning-input
-					type     = "text"
-					name     = "retrieveAccountsButton"
-					label    = "Retrieve Accounts Like"
-					value    = {nameFilter}
-					onblur   = {handleRetrieveAccountsLike}
-				>
-				</lightning-input>
-			</div>
+            <lightning-layout horizontal-align="spread">
+                <lightning-layout-item padding="around-small" size="3" flexibility="shrink">
+                    <!-- Button for adding a new Accounts -->
+                    <lightning-button
+                        class   = "slds-m-left_x-small"
+                        variant = "brand"
+                        label   = "New Account"
+                        title   = "New Account"
+                        onclick = {handleAddNewAccount}
+                    >
+                    </lightning-button>
+                <!-- </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="1" flexibility="shrink"> -->
+                    <!-- Button for delete Accounts -->
+                    <lightning-button
+                        class   = "slds-m-left_x-small"
+                        variant = "brand"
+                        label   = "Delete Accounts"
+                        title   = "Delete Accounts"
+                        onclick = {handleConfirmDelete}
+                    >
+                    </lightning-button>
+                <!-- </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="1" flexibility="shrink"> -->
+                    <!-- Edit control for specifying account name filter -->
+                    <lightning-input
+                        type        = "text"
+                        name        = "retrieveAccountsButton"
+                        value       = {nameFilter}
+                        onchange    = {handleKeyChange}
+                        placeholder = "Retrieve Accounts Like"
+                    >
+                    </lightning-input>
+                </lightning-layout-item>
+			</lightning-layout>
 		</div>
 
 		<!-- Do not display table if nothing in the table -->
-		<template if:true={tableData.length}>
+		<!-- <template if:true={data.length}> -->
 			<!-- The Table component -->
 			<div style="height: 500;">
 				<lightning-datatable
@@ -63,15 +66,18 @@
 					draft-values           	= {draftValues}
 					columns                	= {columns}
 					oncellchange           	= {handleOnCellChange}
-				>
+                    onrowaction             = {handleRowActions}
+                    onsort                  = {handleSortColumns}
+                    >
 				</lightning-datatable>
 			</div>
-		</template>
+		<!-- </template> -->
 	</lightning-card>
 
-	<!-- <lightning-layout-item flexibility="auto" padding="around-small"> -->
-		<!-- Here is where we hook in the child component from the parent component -->
-		<c-demo-c-r-u-d-create></c-demo-c-r-u-d-create>
-	<!-- </lightning-layout-item> -->
+    <!-- Here is where we hook in the dialog for creating a new account -->
+    <!-- <c-demo-c-r-u-d-create></c-demo-c-r-u-d-create> -->
+
+    <!-- Here is where we hook in the dialog for deleting selected account(s) -->
+    <!-- <c-demo-c-r-u-d-delete></c-demo-c-r-u-d-delete> -->
 
 </template>
