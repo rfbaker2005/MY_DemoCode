@@ -7,10 +7,11 @@
  *              CRUD operations on the Salesforce platform. The class will showcase Apex and
  *              LWC code for creating an account, renaming the account, modify one or more fields
  *              in the account and delete the account.
+ *
+ *              The UI for this demo is the demoCRUDTabe Lightning Web Component.  To see this in
+ *              action, embed this component on a page where it can be displayed.
  */
 public with sharing class DemoCRUDController {
-
-    private static final String MaskLike = '%{0}%'; // For the SOQL LIKE clause
 
     public static DemoCRUDController Instance {
         get {
@@ -55,37 +56,29 @@ public with sharing class DemoCRUDController {
     }
 
     /***
-     * This is the CRUD "Read" operation.  Returns a list of all Account objects.
+     * This is the CRUD "Read" operation.  Returns a list of accounts sorted by the sortBy field.
      *
-     * @return       A list of all Accounts.
+     * @param searchKey     - The search pattern of the account name to retrieve.
+     * @param sortBy        - The current field by which to sort.
+     * @apram sortDirection - The direction of the sorted given the current sortBy field.
+     *
+     * @return The list of accounts sorted by the sortBy field.
      */
-    @AuraEnabled(cacheable=false)
-    public static List<Account> retrieveAccounts () {
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccounts (String searchKey, String sortBy, String sortDirection) {
 
-        return Instance.performRetrieveAccounts();
+        return Instance.performGetAccounts(searchKey, sortBy, sortDirection);
     }
 
     /***
-     * This is the CRUD "Read" operation.  Returns a list of Account objects by Name filter.
+     * This is the CRUD "Update" operation.  Performs an update an account record.
      *
-     * @param        filterString - Contains a string pattern that identifes Account objects to return.
-     * @return       A list of Accounts that match the filter string pattern
-     */
-    @AuraEnabled(cacheable=false)
-    public static List<Account> retrieveAccountsLike (String filterString) {
-
-        return Instance.performRetrieveAccountsLike(filterString);
-    }
-
-    /***
-     * This is the CRUD "Update" operation.  Performs an update of the account Description field.
-     *
-     * @param accounts - The list of accounts to be updated.
+     * @param account - The account record to be updated.
      */
     @AuraEnabled
-    public static void updateAccounts(List<Account> accounts) {
+    public static void updateAccount(Account account) {
 
-        Instance.performUpdateAccounts(accounts);
+        Instance.performUpdateAccount(account);
     }
 
     /***
@@ -142,64 +135,61 @@ public with sharing class DemoCRUDController {
     }
 
     /***
-     * This is the CRUD "Read" operation.  Returns a list of all Account objects.
+     * This is the CRUD "Read" operation.  Returns a list of accounts sorted by the sortBy field.
      *
-     * @return       A list of all Accounts.
+     * @param searchKey     - The search pattern of the account name to retrieve.
+     * @param sortBy        - The current field by which to sort.
+     * @apram sortDirection - The direction of the sorted given the current sortBy field.
+     *
+     * @return The list of accounts sorted by the sortBy field.
      */
-    public List<Account> performRetrieveAccounts () {
+    private List<Account> performGetAccounts (String searchKey, String sortBy, String sortDirection) {
 
-        List<Account> accounts = [  SELECT  Name, Description, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry
-                                    FROM    Account
-                                    ORDER BY Name];
+        System.debug('DemoCRUDController.performGetAccounts.01.1 searchKey: ['+searchKey+'] sortBy: ['+sortBy+'] seasortDirectionrchKey: ['+sortDirection+']');
 
-        System.debug ('DemoCRUDController.performRetrieveAccounts.01.1.3 accounts: ['+accounts+']');
+        String queryString = 'SELECT Name, Description, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry FROM Account';
 
-        return accounts;
+        if (String.isNotEmpty(searchKey)) {
+
+            String key = '%' + searchKey + '%';
+            queryString += ' WHERE Name LIKE :key';
+        }
+
+        if (String.isNotEmpty(sortBy) && String.isNotEmpty(sortDirection)) {
+
+            queryString += ' ORDER BY ' + sortBy + ' ' + sortDirection;
+        }
+
+        System.debug('DemoCRUDController.performGetAccounts.01.2 queryString: ['+queryString+']');
+
+        List<Account> retrievedAccounts = Database.query(queryString);
+
+        System.debug('DemoCRUDController.performGetAccounts.01.3 retrievedAccounts: ['+queryString+']');
+
+        return retrievedAccounts;
     }
 
     /***
-     * This is the CRUD "Read" operation.  Returns a list of Account objects by Name filter.
+     * This is the CRUD "Update" operation.  Performs an update an account record.
      *
-     * @param        filterString - Contains a string pattern that identifes Account objects to return.
-     * @return       A list of Accounts that match the filter string pattern
+     * @param account - The account record to be updated.
      */
-    public List<Account> performRetrieveAccountsLike (String filterString) {
+    private void performUpdateAccount (Account account) {
 
-        System.debug ('DemoCRUDController.fetchAccounts.01.1.1 filterString: ['+filterString+']');
-
-        final String searchToken = String.format(MaskLike, new String[] {filterString});
-
-        System.debug ('DemoCRUDController.fetchAccounts.01.1.2 searchToken: ['+searchToken+']');
-
-        List<Account> accounts = [  SELECT  Name, Description, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry
-                                    FROM    Account
-                                    WHERE   Name LIKE :searchToken
-                                    ORDER BY Name];
-
-        System.debug ('DemoCRUDController.fetchAccounts.01.1.3 accounts: ['+accounts+']');
-
-        return accounts;
-    }
-
-    /***
-     * This is the CRUD "Update" operation.  Performs an update of the account Description field.
-     *
-     * @param accounts - The list of accounts to be updated.
-     */
-    private void performUpdateAccounts(List<Account> accounts) {
-
-        System.assertNotEquals  (null, accounts);
-        System.assertEquals     (false, accounts.isEmpty());
+        System.assertNotEquals  (null, account);
 
         try {
 
             UnitTestUtil.forceExceptionInUnitTest();
 
-            update accounts;
+            update account;
+
+            // Tell the listening data table to refresh this record
+            publishRefreshEvents (new List<Account> { account });
 
         } catch (Exception ex) {
 
-            System.debug('DemoCRUDController.performRetrieveAccountsLike.01.1 Exception: ' + ex);
+            System.debug('DemoCRUDController.performUpdateAccount.01.1 Exception: ' + ex);
 
             throw new WidgetsAreUsException(ex);
         }
@@ -229,5 +219,30 @@ public with sharing class DemoCRUDController {
 
             throw new WidgetsAreUsException(ex);
         }
+    }
+
+    //
+    // ========== Supporting Logic ==================================================
+    //
+
+    /***
+     * Publishes one or more Data Table Refresh Events to indicate to the subscriber that
+     * the Lightning data table records (in this case, Accounts) need to be refreshed.
+     *
+     * @param accounts - The list of account records that need to be refreshed in the table.
+     */
+    private void publishRefreshEvents (List<Account> accounts) {
+
+        System.assertNotEquals  (null, accounts);
+        System.assertEquals     (false, accounts.isEmpty());
+
+        List<RefreshDataTable__e> eventsToPublish = new List<RefreshDataTable__e> ();
+
+        for (Account account : accounts) {
+
+            eventsToPublish.add(new RefreshDataTable__e (RecordId__c = account.Id));
+        }
+
+        EventBus.publish(eventsToPublish);
     }
 }
