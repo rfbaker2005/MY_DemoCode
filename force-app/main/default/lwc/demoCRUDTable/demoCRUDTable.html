@@ -20,7 +20,7 @@
 		<div class="slds-var-p-around_small lgc-bg">
             <lightning-layout horizontal-align="spread">
                 <lightning-layout-item padding="around-small" size="3" flexibility="shrink">
-                    <!-- Button for adding a new Accounts -->
+                    <!-- Button for adding a New Accounts -->
                     <lightning-button
                         class   = "slds-m-left_x-small"
                         variant = "brand"
@@ -37,7 +37,7 @@
                         variant = "brand"
                         label   = "Delete Accounts"
                         title   = "Delete Accounts"
-                        onclick = {handleConfirmDelete}
+                        onclick = {handleDeleteSelectedAccounts}
                     >
                     </lightning-button>
                 <!-- </lightning-layout-item>
@@ -56,7 +56,7 @@
 		</div>
 
 		<!-- Do not display table if nothing in the table -->
-		<!-- <template if:true={data.length}> -->
+		<template if:true={tableData.length}>
 			<!-- The Table component -->
 			<div style="height: 500;">
 				<lightning-datatable
@@ -71,11 +71,11 @@
                     >
 				</lightning-datatable>
 			</div>
-		<!-- </template> -->
+		</template>
 	</lightning-card>
 
     <!-- Here is where we hook in the dialog for creating a new account -->
-    <!-- <c-demo-c-r-u-d-create></c-demo-c-r-u-d-create> -->
+    <c-demo-c-r-u-d-create></c-demo-c-r-u-d-create>
 
     <!-- Here is where we hook in the dialog for deleting selected account(s) -->
     <!-- <c-demo-c-r-u-d-delete></c-demo-c-r-u-d-delete> -->
