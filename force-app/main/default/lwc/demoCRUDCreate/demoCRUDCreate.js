@@ -84,13 +84,13 @@ export default class demoCRUDCreate extends LightningElement {
 
         const fields = {};
 
-        fields[NAME_FIELD.fieldApiName]         = this.accountName;
-        fields[BA_STREET_FIELD.fieldApiName]    = this.billingStreet;
-        fields[BA_CITY_FIELD.fieldApiName]      = this.billingCity;
-        fields[BA_STATE_FIELD.fieldApiName]     = this.billingState;
-        fields[BA_ZIP_FIELD.fieldApiName]       = this.billingZip;
-        fields[BA_COUNTRY_FIELD.fieldApiName]   = this.description;
-        fields[BA_DESC_FIELD.fieldApiName]      = this.billingCountry;
+        fields[NAME_FIELD.fieldApiName]       = this.accountName;
+        fields[BA_STREET_FIELD.fieldApiName]  = this.billingStreet;
+        fields[BA_CITY_FIELD.fieldApiName]    = this.billingCity;
+        fields[BA_STATE_FIELD.fieldApiName]   = this.billingState;
+        fields[BA_ZIP_FIELD.fieldApiName]     = this.billingZip;
+        fields[BA_COUNTRY_FIELD.fieldApiName] = this.billingCountry;
+        fields[BA_DESC_FIELD.fieldApiName]    = this.description;
 
         console.log('DEBUG.demoCRUDCreate.01.1.1 fields: ' + fields);
 
