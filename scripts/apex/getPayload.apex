@@ -1,5 +1,5 @@
 // Example of how to pull a payload from a method and cast it into a particular datatype.
-
+// Datatype used is Map<String, List<String>>.
 
 Map<String, List<String>> payload = null;
 
